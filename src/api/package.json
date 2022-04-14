@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "description": "",
+  "type": "module",
   "main": "dist/api.js",
   "scripts": {
     "start": "tsc && node dist/api.js",
     "lint": "eslint . --ext .ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generateStravaModels": "tsc && node ./dist/utils/generateStravaModels.js"
   },
   "keywords": [],
   "author": "",
@@ -18,10 +20,16 @@
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
     "eslint": "^8.13.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "openapi-typescript": "^5.2.0",
     "typescript": "^4.6.3"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "node-fetch": "^3.2.3"
   }
 }
