@@ -1,0 +1,91 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI specification for the CycleStats API
+  version: 0.0.1
+paths:
+  /summary:
+    get:
+      summary: Get summary information
+      description: Returns summary about cyclist and rides
+      operationId: getSummary
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Summary'
+  /statistics:
+    get:
+      summary: Get statistics
+      description: Returns detailed statistics about cyclist and rides
+      operationId: getStatistics
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+servers:
+  - url: /api/v1
+components:
+  schemas:
+    Cyclist:
+      description: Information about the cyclist
+      type: object
+      properties:
+        name:
+          description: First name and last name 
+          type: string
+        sex:
+          type: string
+        location:
+          type: string
+        ftp:
+          type: number
+        weight:
+          type: number
+        profileUrl:
+          type: string
+      required:
+        - name
+    DistancePerMonth:
+      description: Distance entry for a given month
+      type: object
+      properties:
+        month:
+          type: number
+        year:
+          type: number
+        distance:
+          type: number
+      required:
+        - month
+        - year
+        - distance
+    DistanceUnit:
+      description: Unit for distance used throughout an object either in kilometer (KM) or miles (MI)
+      type: string
+      enum:
+        - KM
+        - MI
+    Statistics:
+      description: Detailed statistics about cyclist and rides
+      type: object
+      properties:
+        distanceUnit:
+          $ref: '#/components/schemas/DistanceUnit'
+        distancesPerMonth:
+          description: Distance ridden per month
+          type: array
+          items:
+            $ref: '#/components/schemas/DistancePerMonth'        
+    Summary:
+      description: Summary info about cyclist and rides
+      type: object
+      properties:
+        distanceUnit:
+          $ref: '#/components/schemas/DistanceUnit'
+        cyclist:
+          $ref: '#/components/schemas/Cyclist'
