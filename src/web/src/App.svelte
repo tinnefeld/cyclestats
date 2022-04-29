@@ -2,31 +2,48 @@
 	import { writable } from 'svelte/store';
   import { onMount } from "svelte";
 
-	export const apiData = writable([]);
+	import type { components } from "./models/ICycleStats";
+	type IStatistics = components["schemas"]["Statistics"];
+	type ISummary = components["schemas"]["Summary"];
+
+	const storeStatistics = writable({} as IStatistics);
+	const storeSummary = writable({} as ISummary);
+
+	const BACKEND_URL = "http://localhost:8090/api/v1"
 
   onMount(async () => {
 		try {
-		  const response = await fetch("http://localhost:8090/activities");
-		  const data = await response.json();
-			console.log(data);
-      apiData.set(data);
+		  const summaryResponse = await fetch(`${BACKEND_URL}/summary`);
+		  const summaryData: ISummary = await summaryResponse.json();
+      storeSummary.set(summaryData);
+			const statisticsResponse = await fetch(`${BACKEND_URL}/statistics`);
+		  const statisticsData: IStatistics = await statisticsResponse.json();
+      storeStatistics.set(statisticsData);
 		} catch (error) {
 			console.log(error);
 		}
 	})
-  export let name: string;
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	{#if $apiData.length > 0}
-	<h3>Activities:</h3>
+	<h1>CycleStats</h1>
+	{#if $storeSummary.cyclist}
+	<h2>Hello {$storeSummary.cyclist.firstName} {$storeSummary.cyclist.lastName}</h2>
 	<ul>
-		{#each $apiData as activity}
-			<li>{activity.name}</li>
+		{#each Object.keys($storeSummary.cyclist) as key}
+			<li>{key} : {$storeSummary.cyclist[key]}</li>
 		{/each}
 	</ul>
 	{/if}
+
+	{#if $storeStatistics.distancesPerMonth}
+	<ul>
+		{#each $storeStatistics.distancesPerMonth as month}
+  		<li>Year: {month.year} Month: {month.month} Distance: {month.distance} </li>
+		{/each}
+	</ul>
+	{/if}	
+
 </main>
 
 <style>

@@ -3,8 +3,9 @@ import openapiTS from "openapi-typescript";
 import { promises as fsPromises } from "fs";
 
 const STRAVA_SWAGGER_URL_PATH = "https://developers.strava.com/swagger/";
-const STRAVA_SWAGGER_FILES = ["activity.json", "activity_type.json", "athlete.json", "club.json", "gear.json",
-  "lap.json", "latlng.json", "map.json", "photo.json", "segment.json", "segment_effort.json", "split.json"];
+const STRAVA_SWAGGER_FILES = ["activity.json", "activity_stats.json", "activity_total.json", "activity_type.json",
+  "athlete.json", "club.json", "gear.json", "lap.json", "latlng.json", "map.json", "photo.json", "segment.json",
+  "segment_effort.json", "split.json"];
 
 /**
  * Fetch Swagger JSON files from Strava and create corresponding TypeScript models

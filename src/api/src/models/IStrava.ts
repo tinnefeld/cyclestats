@@ -160,6 +160,58 @@ export interface definitions {
     /** @description Identifier for the gear associated with the activity. ‘none’ clears gear from activity */
     gear_id?: string;
   };
+  /** @description A set of rolled-up statistics and totals for an athlete */
+  ActivityStats: {
+    /**
+     * Format: double
+     * @description The longest distance ridden by the athlete.
+     */
+    biggest_ride_distance?: number;
+    /**
+     * Format: double
+     * @description The highest climb ridden by the athlete.
+     */
+    biggest_climb_elevation_gain?: number;
+    /** @description The recent (last 4 weeks) ride stats for the athlete. */
+    recent_ride_totals?: definitions["ActivityTotal"];
+    /** @description The recent (last 4 weeks) run stats for the athlete. */
+    recent_run_totals?: definitions["ActivityTotal"];
+    /** @description The recent (last 4 weeks) swim stats for the athlete. */
+    recent_swim_totals?: definitions["ActivityTotal"];
+    /** @description The year to date ride stats for the athlete. */
+    ytd_ride_totals?: definitions["ActivityTotal"];
+    /** @description The year to date run stats for the athlete. */
+    ytd_run_totals?: definitions["ActivityTotal"];
+    /** @description The year to date swim stats for the athlete. */
+    ytd_swim_totals?: definitions["ActivityTotal"];
+    /** @description The all time ride stats for the athlete. */
+    all_ride_totals?: definitions["ActivityTotal"];
+    /** @description The all time run stats for the athlete. */
+    all_run_totals?: definitions["ActivityTotal"];
+    /** @description The all time swim stats for the athlete. */
+    all_swim_totals?: definitions["ActivityTotal"];
+  };
+  /** @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters. */
+  ActivityTotal: {
+    /** @description The number of activities considered in this total. */
+    count?: number;
+    /**
+     * Format: float
+     * @description The total distance covered by the considered activities.
+     */
+    distance?: number;
+    /** @description The total moving time of the considered activities. */
+    moving_time?: number;
+    /** @description The total elapsed time of the considered activities. */
+    elapsed_time?: number;
+    /**
+     * Format: float
+     * @description The total elevation gain of the considered activities.
+     */
+    elevation_gain?: number;
+    /** @description The total number of achievements of the considered activities. */
+    achievement_count?: number;
+  };
   /**
    * @description An enumeration of the types an activity may have.
    * @enum {string}
@@ -694,6 +746,10 @@ export interface definitions {
 export interface operations {}
 
 export interface external {
+  "https://developers.strava.com/swagger/activity_total.json": {
+    paths: {};
+    operations: {};
+  };
   "https://developers.strava.com/swagger/activity_type.json": {
     paths: {};
     operations: {};

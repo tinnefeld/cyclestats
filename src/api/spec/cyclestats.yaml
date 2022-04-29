@@ -35,9 +35,10 @@ components:
       description: Information about the cyclist
       type: object
       properties:
-        name:
-          description: First name and last name 
+        firstName:
           type: string
+        lastName:
+          type: string  
         sex:
           type: string
         location:
@@ -48,8 +49,8 @@ components:
           type: number
         profileUrl:
           type: string
-      required:
-        - name
+        measurement:
+          $ref: '#/components/schemas/MeasurementUnit'
     DistancePerMonth:
       description: Distance entry for a given month
       type: object
@@ -64,28 +65,24 @@ components:
         - month
         - year
         - distance
-    DistanceUnit:
-      description: Unit for distance used throughout an object either in kilometer (KM) or miles (MI)
-      type: string
-      enum:
-        - KM
-        - MI
     Statistics:
       description: Detailed statistics about cyclist and rides
       type: object
       properties:
-        distanceUnit:
-          $ref: '#/components/schemas/DistanceUnit'
         distancesPerMonth:
           description: Distance ridden per month
           type: array
           items:
-            $ref: '#/components/schemas/DistancePerMonth'        
+            $ref: '#/components/schemas/DistancePerMonth'
     Summary:
       description: Summary info about cyclist and rides
       type: object
       properties:
-        distanceUnit:
-          $ref: '#/components/schemas/DistanceUnit'
         cyclist:
           $ref: '#/components/schemas/Cyclist'
+    MeasurementUnit:
+      description: Indicates if imperial or metric units are used
+      type: string
+      enum:
+        - IMPERIAL
+        - METRIC
