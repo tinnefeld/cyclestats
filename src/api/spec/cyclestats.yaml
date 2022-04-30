@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: OpenAPI specification for the CycleStats API
-  version: 0.0.1
+  version: 1.0.2
 paths:
   /summary:
     get:
@@ -27,6 +27,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Statistics'
+  /oauth/token:
+    post:
+      summary: Request OAuth 2.0 token
+      description: Request an OAuth 2.0 token by providing an authorization code
+      operationId: postToken
+      parameters:
+        - in: query
+          description: Authorization code used for requesting the OAuth 2.0 token
+          required: true
+          name: code
+            type: string          
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bearerToken:
+                    type: string
 servers:
   - url: /api/v1
 components:
