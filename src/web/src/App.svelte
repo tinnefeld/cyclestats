@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { Authentication, authenticationState } from "./stores";
 	import Login from "./Login.svelte";
 	import Statistics from "./Statistics.svelte";
 	const BACKEND_URL = "http://localhost:8090/api/v1";
-	let bearerTokenApp;
 </script>
 
 <main>
 	<h1>CycleStats</h1>
-	<Login bind:bearerTokenLogin={bearerTokenApp} BACKEND_URL={BACKEND_URL}/>
-	{#if bearerTokenApp}
-		<Statistics bearerTokenStatistics={bearerTokenApp} BACKEND_URL={BACKEND_URL}/>
+	<Login BACKEND_URL={BACKEND_URL}/>
+	{#if $authenticationState === Authentication.SUCCEEDED}
+		<Statistics BACKEND_URL={BACKEND_URL}/>
 	{/if}
 </main>
 

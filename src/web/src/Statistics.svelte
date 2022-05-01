@@ -1,59 +1,57 @@
 <script lang="ts">
-  import { writable } from "svelte/store";
   import { onMount } from "svelte";
+  import { bearerToken } from "./stores";
   import type { components } from "./models/ICycleStats";
-  
+
   type IStatistics = components["schemas"]["Statistics"];
   type ISummary = components["schemas"]["Summary"];
 
-  const storeStatistics = writable({} as IStatistics);
-  const storeSummary = writable({} as ISummary);
-
   export let BACKEND_URL;
-  export let bearerTokenStatistics;
+
+  let storeStatistics: IStatistics;
+  let storeSummary: ISummary; 
 
   onMount(async () => {
     try {
-      const summaryResponse = await fetch(`${BACKEND_URL}/summary`, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${bearerTokenStatistics}`,
-        },
-      });
-      const summaryData: ISummary = await summaryResponse.json();
-      storeSummary.set(summaryData);
-      const statisticsResponse = await fetch(`${BACKEND_URL}/statistics`, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${bearerTokenStatistics}`,
-        },
-      });
-      const statisticsData: IStatistics = await statisticsResponse.json();
-      storeStatistics.set(statisticsData);
+      const headerAuth = { "Content-type": "application/json", Authorization: `Bearer ${$bearerToken}` };
+      fetch(`${BACKEND_URL}/summary`, { headers: headerAuth })
+      .then(summaryResponse => summaryResponse.json())
+      .then(summaryData => storeSummary = summaryData);
+
+      fetch(`${BACKEND_URL}/statistics`, { headers: headerAuth })
+      .then(statisticsResponse => statisticsResponse.json())
+      .then(statisticsData => storeStatistics = statisticsData);
     } catch (error) {
       console.log(error);
     }
   });
 </script>
 
-{#if $storeSummary.cyclist}
+{#if storeSummary && storeSummary.cyclist}
   <h2>
-    Hello {$storeSummary.cyclist.firstName}
-    {$storeSummary.cyclist.lastName}
+    Hello {storeSummary.cyclist.firstName}
+    {storeSummary.cyclist.lastName}
   </h2>
   <ul>
-    {#each Object.keys($storeSummary.cyclist) as key}
-      <li>{key} : {$storeSummary.cyclist[key]}</li>
+    {#each Object.keys(storeSummary.cyclist) as key}
+      <li>{key} : {storeSummary.cyclist[key]}</li>
     {/each}
   </ul>
 {/if}
 
-{#if $storeStatistics.distancesPerMonth}
+{#if storeStatistics && storeStatistics.distancesPerMonth}
   <ul>
-    {#each $storeStatistics.distancesPerMonth as month}
+    {#each storeStatistics.distancesPerMonth as month}
       <li>
         Year: {month.year} Month: {month.month} Distance: {month.distance}
       </li>
     {/each}
   </ul>
 {/if}
+
+<style>
+	ul {
+		text-align: center;
+		list-style: inside;
+	}
+</style>
