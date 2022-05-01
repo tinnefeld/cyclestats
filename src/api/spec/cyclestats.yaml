@@ -2,12 +2,24 @@ openapi: 3.0.0
 info:
   title: OpenAPI specification for the CycleStats API
   version: 1.0.2
+servers:
+  - url: /api/v1
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: query
+    name: code    
+  BearerAuth:
+    type: http
+    scheme: bearer        
 paths:
   /summary:
     get:
       summary: Get summary information
       description: Returns summary about cyclist and rides
       operationId: getSummary
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: success
@@ -20,6 +32,8 @@ paths:
       summary: Get statistics
       description: Returns detailed statistics about cyclist and rides
       operationId: getStatistics
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: success
@@ -32,6 +46,8 @@ paths:
       summary: Request OAuth 2.0 token
       description: Request an OAuth 2.0 token by providing an authorization code
       operationId: postToken
+      security:
+        - ApiKeyAuth: []
       parameters:
         - in: query
           description: Authorization code used for requesting the OAuth 2.0 token
@@ -48,8 +64,6 @@ paths:
                 properties:
                   bearerToken:
                     type: string
-servers:
-  - url: /api/v1
 components:
   schemas:
     Cyclist:

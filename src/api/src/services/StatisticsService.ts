@@ -1,4 +1,5 @@
 import { components } from "../models/ICycleStats";
+import { BearerToken } from "../models/IUtils";
 import { StravaImportService } from "./StravaImportService.js";
 
 type ICyclist = components["schemas"]["Cyclist"];
@@ -9,8 +10,8 @@ type ISummary = components["schemas"]["Summary"];
 export class StatisticsService {
   private importService: StravaImportService;
 
-  constructor() {
-    this.importService = new StravaImportService();
+  constructor(bearerToken: BearerToken) {
+    this.importService = new StravaImportService(bearerToken);
   }
 
   public async createSummary(): Promise<ISummary> {

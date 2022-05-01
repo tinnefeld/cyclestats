@@ -6,7 +6,8 @@
   "main": "dist/api.js",
   "type": "module",
   "scripts": {
-    "start": "export NODE_ENV=DEV; tsc && node dist/api.js",
+    "dev": "export NODE_ENV=DEV; tsc && node dist/api.js",
+    "prod": "export NODE_ENV=PROD; tsc && node dist/api.js",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generateStravaModels": "tsc && node ./dist/scripts/generateStravaModels.js",
