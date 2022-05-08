@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { Styles as SveltestrapStyles } from 'sveltestrap';
 	import { Authentication, authenticationState } from "./stores";
 	import Login from "./Login.svelte";
 	import Statistics from "./Statistics.svelte";
-	const BACKEND_URL = "http://localhost:8090/api/v1";
+	const BACKEND_URL = "http://localhost:8090/api/v1";	
 </script>
 
 <main>
@@ -12,6 +13,8 @@
 		<Statistics BACKEND_URL={BACKEND_URL}/>
 	{/if}
 </main>
+
+<SveltestrapStyles />
 
 <style>
 	main {

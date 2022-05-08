@@ -30,7 +30,7 @@
 
 {#if $authenticationState === Authentication.NONE}
   <button
-    onclick="window.location.href='https://www.strava.com/oauth/authorize?client_id=79758&response_type=code&redirect_uri=http://localhost:8080?approval_prompt=force&scope=read,read_all,activity:read';"
+    onclick="window.location.href='https://www.strava.com/oauth/authorize?client_id=79758&response_type=code&redirect_uri=http://localhost:8080?approval_prompt=force&scope=read,read_all,activity:read_all';"
   >
     Login with Strava
   </button>
