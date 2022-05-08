@@ -12,6 +12,10 @@ export interface paths {
     /** Returns detailed statistics about cyclist and rides */
     get: operations["getStatistics"];
   };
+  "/oauth/token": {
+    /** Request an OAuth 2.0 token by providing an authorization code */
+    post: operations["postToken"];
+  };
 }
 
 export interface components {
@@ -26,6 +30,8 @@ export interface components {
       weight?: number;
       profileUrl?: string;
       measurement?: components["schemas"]["MeasurementUnit"];
+      longestRide?: number;
+      highestClimb?: number;
     };
     /** @description Distance entry for a given month */
     DistancePerMonth: {
@@ -69,6 +75,25 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Statistics"];
+        };
+      };
+    };
+  };
+  /** Request an OAuth 2.0 token by providing an authorization code */
+  postToken: {
+    parameters: {
+      query: {
+        /** Authorization code used for requesting the OAuth 2.0 token */
+        code: unknown;
+      };
+    };
+    responses: {
+      /** created */
+      201: {
+        content: {
+          "application/json": {
+            bearerToken?: string;
+          };
         };
       };
     };

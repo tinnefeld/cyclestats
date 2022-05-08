@@ -1,4 +1,5 @@
 import { components } from "../models/ICycleStats";
+import { definitions } from "../models/IStrava";
 import { BearerToken } from "../models/IUtils";
 import { StravaImportService } from "./StravaImportService.js";
 
@@ -6,6 +7,7 @@ type ICyclist = components["schemas"]["Cyclist"];
 type IDistancePerMonth = components["schemas"]["DistancePerMonth"];
 type IStatistics = components["schemas"]["Statistics"];
 type ISummary = components["schemas"]["Summary"];
+type IStravaActivityStats = definitions["ActivityStats"];
 
 export class StatisticsService {
   private importService: StravaImportService;
@@ -16,6 +18,10 @@ export class StatisticsService {
 
   public async createSummary(): Promise<ISummary> {
     const cyclistImport = await this.importService.getAthlete();
+    let cyclistStatsSummaryImport: IStravaActivityStats = {};
+    if (cyclistImport.id) {
+      cyclistStatsSummaryImport = await this.importService.getAthleteStats(cyclistImport.id);
+    }
     const cyclist: ICyclist = {};
     if (cyclistImport.firstname) {
       cyclist.firstName = cyclistImport.firstname;
@@ -45,12 +51,17 @@ export class StatisticsService {
         cyclist.measurement = "METRIC";
       }
     }
+    if (cyclistStatsSummaryImport.biggest_ride_distance) {
+      cyclist.longestRide = cyclistStatsSummaryImport.biggest_ride_distance;
+    }
+    if (cyclistStatsSummaryImport.biggest_climb_elevation_gain) {
+      cyclist.highestClimb = cyclistStatsSummaryImport.biggest_climb_elevation_gain;
+    }
     return { cyclist };
   }
 
   public async createStatistics(): Promise<IStatistics> {
-    let activitiesImport = await this.importService.getActivities();
-    activitiesImport = activitiesImport.filter(activity => activity.type === "Ride");
+    const activitiesImport = await this.importService.getActivities();
     const distancesPerMonth: IDistancePerMonth[] = [];
     let currentMonth;
     let currentYear;
