@@ -2,7 +2,7 @@
 	import { Styles as SveltestrapStyles } from "sveltestrap";
 	import { Authentication, authenticationState } from "./stores";
 	import Login from "./Login.svelte";
-	import NavBar from "./NavBar.svelte"
+	import NavBar from "./NavBar.svelte";
 	import Statistics from "./Statistics.svelte";
 	const BACKEND_URL = "http://localhost:8090/api/v1";
 </script>

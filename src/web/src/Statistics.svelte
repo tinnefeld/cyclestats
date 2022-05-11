@@ -8,7 +8,7 @@
   type IStatistics = components["schemas"]["Statistics"];
   type ISummary = components["schemas"]["Summary"];
 
-  export let BACKEND_URL;
+  export let BACKEND_URL: string;
 
   let storeStatistics: IStatistics;
   let storeSummary: ISummary;
@@ -17,7 +17,7 @@
     try {
       const headerAuth = {
         "Content-type": "application/json",
-        Authorization: `Bearer ${$bearerToken}`,
+        Authorization: `Bearer ${$bearerToken}`
       };
       fetch(`${BACKEND_URL}/summary`, { headers: headerAuth })
         .then((summaryResponse) => summaryResponse.json())

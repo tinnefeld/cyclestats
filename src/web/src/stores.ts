@@ -1,9 +1,9 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
 export enum Authentication {
-  NONE,
-  PENDING,
-  SUCCEEDED
+  NONE = "NONE",
+  PENDING = "PENDING",
+  SUCCEEDED = "SUCCEEDED"
 }
 export const authenticationState = writable(Authentication.NONE);
 

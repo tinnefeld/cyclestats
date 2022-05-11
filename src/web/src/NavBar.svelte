@@ -1,28 +1,49 @@
 <script lang="ts">
-  import { Col, Container, Navbar, Row } from 'sveltestrap';
+  import { Col, Container, Navbar, Row } from "sveltestrap";
   import { MeasurementUnit, measurementUnitState } from "./stores";
 
-  function handleUnitChange(event) {
-		if (event.target.id === "btnradioImperial") {
-			measurementUnitState.set(MeasurementUnit.IMPERIAL);
-		} else if (event.target.id === "btnradioMetric") {
-			measurementUnitState.set(MeasurementUnit.METRIC);
-		}
-	}
+  function handleUnitChange(event: Event) {
+    if (event.target instanceof Element) {
+      if (event.target.id === "btnradioImperial") {
+        measurementUnitState.set(MeasurementUnit.IMPERIAL);
+      } else if (event.target.id === "btnradioMetric") {
+        measurementUnitState.set(MeasurementUnit.METRIC);
+      }
+    }
+  }
 </script>
 
 <Navbar class="mb-2">
   <Container>
     <Row class="justify-content-end">
-    <Col class="col-auto">
-  <div class="btn-group" role="group">
-		<input type="radio" class="btn-check" name="btnradio" id="btnradioImperial" autocomplete="off" checked on:change={handleUnitChange}>
-		<label class="btn btn-outline-secondary" for="btnradioImperial">Imperial</label>
-	
-		<input type="radio" class="btn-check" name="btnradio" id="btnradioMetric" autocomplete="off" on:change={handleUnitChange}>
-		<label class="btn btn-outline-secondary" for="btnradioMetric">Metric</label>
-	</div>
-</Col>
-</Row>
-</Container>
+      <Col class="col-auto">
+        <div class="btn-group" role="group">
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="btnradioImperial"
+            autocomplete="off"
+            checked
+            on:change={handleUnitChange}
+          />
+          <label class="btn btn-outline-secondary" for="btnradioImperial"
+            >Imperial</label
+          >
+
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="btnradioMetric"
+            autocomplete="off"
+            on:change={handleUnitChange}
+          />
+          <label class="btn btn-outline-secondary" for="btnradioMetric"
+            >Metric</label
+          >
+        </div>
+      </Col>
+    </Row>
+  </Container>
 </Navbar>

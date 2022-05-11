@@ -3,7 +3,12 @@
   import { Authentication, authenticationState, bearerToken } from "./stores";
   const urlParams = new URLSearchParams(window.location.search);
 
-  export let BACKEND_URL;
+  export let BACKEND_URL: string;
+
+  const STRAVA_OAUTH_URL = "https://www.strava.com/oauth/authorize";
+  const STRAVA_CLIENT_ID = "79758";
+  const STRAVA_SCOPE = "read,read_all,activity:read_all";
+  const REDIRECT_URL = "http://localhost:8080";
 
   onMount(async () => {
     if (urlParams.has("code")) {
@@ -26,12 +31,15 @@
       }
     }
   });
+
+  function loginClick() {
+    window.location.replace(`${STRAVA_OAUTH_URL}?client_id=${STRAVA_CLIENT_ID}&response_type=code&` +
+                            `redirect_uri=${REDIRECT_URL}?approval_prompt=force&scope=${STRAVA_SCOPE}`);
+  }
 </script>
 
-{#if $authenticationState === Authentication.NONE}
-  <button
-    onclick="window.location.href='https://www.strava.com/oauth/authorize?client_id=79758&response_type=code&redirect_uri=http://localhost:8080?approval_prompt=force&scope=read,read_all,activity:read_all';"
-  >
-    Login with Strava
+{#if $authenticationState === Authentication.NONE} 
+    <button on:click={loginClick}>
+      Login with Strava
   </button>
 {/if}

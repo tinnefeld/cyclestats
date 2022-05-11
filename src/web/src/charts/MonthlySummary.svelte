@@ -12,7 +12,7 @@
     CardSubtitle,
     Col,
     Container,
-    Row,
+    Row
   } from "sveltestrap";
   import type { components } from "../models/ICycleStats";
 
@@ -30,17 +30,17 @@
     "Sept",
     "Oct",
     "Nov",
-    "Dec",
+    "Dec"
   ];
 
   export let data: IMonthlySummary;
   const references = [];
-  data.forEach((y) => {
-    let canvasReference;
-    let chartReference;
+  data.forEach(() => {
+    let canvasReference: HTMLCanvasElement;
+    let chartReference: Chart;
     references.push({
       canvas: canvasReference,
-      chart: chartReference,
+      chart: chartReference
     });
   });
 
@@ -55,13 +55,13 @@
             label: `Distance in ${DistanceLong[$measurementUnitState]}`,
             backgroundColor: "F76C6C",
             borderColor: "FEFFFF",
-            data: createChartData($measurementUnitState, yearIndex),
-          },
-        ],
+            data: createChartData($measurementUnitState, yearIndex)
+          }
+        ]
       },
       options: {
-        maintainAspectRatio: false,
-      },
+        maintainAspectRatio: false
+      }
     };
     return config;
   }
