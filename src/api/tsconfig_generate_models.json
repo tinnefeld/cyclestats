@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+      "src/scripts/generateCycleStatsModels.ts",
+      "src/scripts/generateStravaModels.ts"      
+  ]
+}

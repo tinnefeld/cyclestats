@@ -3,8 +3,10 @@ import { AuthCode, BearerToken } from "../models/IUtils";
 import { StatisticsService } from "../services/StatisticsService.js";
 import { StravaImportService } from "../services/StravaImportService.js";
 
+const NODE_ENV = process.env.NODE_ENV;
+
 export async function getStatistics(req: express.Request, res: express.Response): Promise<void> {
-  if (!req.headers.authorization) {
+  if (NODE_ENV === "PROD" && !req.headers.authorization) {
     res.status(400).send("Missing bearer token");
   }
   const statisticsService = new StatisticsService(req.headers.authorization as BearerToken);
@@ -13,7 +15,7 @@ export async function getStatistics(req: express.Request, res: express.Response)
 }
 
 export async function getSummary(req: express.Request, res: express.Response): Promise<void> {
-  if (!req.headers.authorization) {
+  if (NODE_ENV === "PROD" && !req.headers.authorization) {
     res.status(400).send("Missing bearer token");
   }
   const statisticsService = new StatisticsService(req.headers.authorization as BearerToken);

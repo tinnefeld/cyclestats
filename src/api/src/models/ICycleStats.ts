@@ -33,20 +33,22 @@ export interface components {
       longestRide?: number;
       highestClimb?: number;
     };
-    /** @description Distance entry for a given month */
-    DistancePerMonth: {
-      month: number;
-      year: number;
-      distance: number;
-    };
     /** @description Detailed statistics about cyclist and rides */
     Statistics: {
-      /** @description Distance ridden per month */
-      distancesPerMonth?: components["schemas"]["DistancePerMonth"][];
+      /** @description Riding statistics summarized on a monthly basis */
+      monthlySummary: {
+        year: number;
+        months: components["schemas"]["SummaryPerMonth"][];
+      }[];
     };
     /** @description Summary info about cyclist and rides */
     Summary: {
       cyclist?: components["schemas"]["Cyclist"];
+    };
+    /** @description Summary of statistics on a monthly basis */
+    SummaryPerMonth: {
+      month: number;
+      distance?: number;
     };
     /**
      * @description Indicates if imperial or metric units are used

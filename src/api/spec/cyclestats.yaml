@@ -90,35 +90,45 @@ components:
           type: number
         highestClimb:
           type: number        
-    DistancePerMonth:
-      description: Distance entry for a given month
-      type: object
-      properties:
-        month:
-          type: number
-        year:
-          type: number
-        distance:
-          type: number
-      required:
-        - month
-        - year
-        - distance
     Statistics:
       description: Detailed statistics about cyclist and rides
       type: object
       properties:
-        distancesPerMonth:
-          description: Distance ridden per month
+        monthlySummary:
+          description: Riding statistics summarized on a monthly basis
           type: array
           items:
-            $ref: '#/components/schemas/DistancePerMonth'
+            type: object
+            properties:
+              year:
+                type: number
+              months:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SummaryPerMonth'
+            required:
+            - year
+            - months
+      required:
+            - monthlySummary
     Summary:
       description: Summary info about cyclist and rides
       type: object
       properties:
         cyclist:
           $ref: '#/components/schemas/Cyclist'
+    SummaryPerMonth:
+      description: Summary of statistics on a monthly basis
+      type: object
+      properties:
+        month:
+          description: Month of the year where 0 is January and 11 is December
+          type: number
+        distance:
+          description: Distance in kilometers
+          type: number
+      required:
+        - month
     MeasurementUnit:
       description: Indicates if imperial or metric units are used
       type: string

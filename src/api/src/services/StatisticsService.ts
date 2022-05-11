@@ -4,7 +4,7 @@ import { BearerToken } from "../models/IUtils";
 import { StravaImportService } from "./StravaImportService.js";
 
 type ICyclist = components["schemas"]["Cyclist"];
-type IDistancePerMonth = components["schemas"]["DistancePerMonth"];
+type IMonthlySummary = components["schemas"]["Statistics"]["monthlySummary"];
 type IStatistics = components["schemas"]["Statistics"];
 type ISummary = components["schemas"]["Summary"];
 type IStravaActivityStats = definitions["ActivityStats"];
@@ -62,20 +62,26 @@ export class StatisticsService {
 
   public async createStatistics(): Promise<IStatistics> {
     const activitiesImport = await this.importService.getActivities();
-    const distancesPerMonth: IDistancePerMonth[] = [];
-    let currentMonth;
-    let currentYear;
+    const monthlySummary: IMonthlySummary = [];
+    let currentMonth = NaN;
+    let currentYear = NaN;
     let currentDistance = 0;
     for (const activity of activitiesImport) {
       if (activity.start_date_local) {
         const d = new Date(activity.start_date_local);
-        if (currentMonth === undefined || currentYear === undefined) {
+        if (isNaN(currentMonth) || isNaN(currentYear)) {
           // first pass
           currentMonth = d.getMonth();
           currentYear = d.getFullYear();
         } else if (currentMonth !== d.getMonth() || currentYear !== d.getFullYear()) {
           // we got a new month or year, we add currentDistance to the result
-          distancesPerMonth.push({ month: currentMonth, year: currentYear, distance: Math.round(currentDistance) });
+          // check if year is already present in monthlySummary, if not add it
+          let index = monthlySummary.findIndex(e => e.year === currentYear);
+          if (index < 0) {
+            monthlySummary.push({ year: currentYear, months: [] });
+            index = (monthlySummary.length - 1);
+          }
+          monthlySummary[index].months.push({ month: currentMonth, distance: Math.round(currentDistance / 1000) });
           currentMonth = d.getMonth();
           currentYear = d.getFullYear();
           currentDistance = 0;
@@ -85,15 +91,8 @@ export class StatisticsService {
         }
       }
     }
-    distancesPerMonth.sort((a, b) => {
-      if (a.year !== b.year) {
-        return a.year - b.year;
-      }
-      if (a.month !== b.month) {
-        return a.month - b.month;
-      }
-      return 0;
-    });
-    return { distancesPerMonth };
+    monthlySummary.forEach(m => m.months.sort((a, b) => a.month - b.month));
+    monthlySummary.sort((a, b) => a.year - b.year);
+    return { monthlySummary };
   }
 }

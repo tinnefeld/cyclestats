@@ -5,6 +5,7 @@ html, body {
 }
 
 body {
+	background-color:#A8D0E6 !important; /* important prevents that it gets overwritten by bootstrap */
 	color: #333;
 	margin: 0;
 	padding: 8px;

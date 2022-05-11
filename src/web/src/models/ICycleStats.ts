@@ -12,6 +12,10 @@ export interface paths {
     /** Returns detailed statistics about cyclist and rides */
     get: operations["getStatistics"];
   };
+  "/oauth/token": {
+    /** Request an OAuth 2.0 token by providing an authorization code */
+    post: operations["postToken"];
+  };
 }
 
 export interface components {
@@ -26,21 +30,25 @@ export interface components {
       weight?: number;
       profileUrl?: string;
       measurement?: components["schemas"]["MeasurementUnit"];
-    };
-    /** @description Distance entry for a given month */
-    DistancePerMonth: {
-      month: number;
-      year: number;
-      distance: number;
+      longestRide?: number;
+      highestClimb?: number;
     };
     /** @description Detailed statistics about cyclist and rides */
     Statistics: {
-      /** @description Distance ridden per month */
-      distancesPerMonth?: components["schemas"]["DistancePerMonth"][];
+      /** @description Riding statistics summarized on a monthly basis */
+      monthlySummary: {
+        year: number;
+        months: components["schemas"]["SummaryPerMonth"][];
+      }[];
     };
     /** @description Summary info about cyclist and rides */
     Summary: {
       cyclist?: components["schemas"]["Cyclist"];
+    };
+    /** @description Summary of statistics on a monthly basis */
+    SummaryPerMonth: {
+      month: number;
+      distance?: number;
     };
     /**
      * @description Indicates if imperial or metric units are used
@@ -69,6 +77,25 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Statistics"];
+        };
+      };
+    };
+  };
+  /** Request an OAuth 2.0 token by providing an authorization code */
+  postToken: {
+    parameters: {
+      query: {
+        /** Authorization code used for requesting the OAuth 2.0 token */
+        code: unknown;
+      };
+    };
+    responses: {
+      /** created */
+      201: {
+        content: {
+          "application/json": {
+            bearerToken?: string;
+          };
         };
       };
     };

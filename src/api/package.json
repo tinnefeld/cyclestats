@@ -10,8 +10,8 @@
     "prod": "export NODE_ENV=PROD; tsc && node dist/api.js",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generateStravaModels": "tsc && node ./dist/scripts/generateStravaModels.js",
-    "generateCycleStatsModels": "tsc && node ./dist/scripts/generateCycleStatsModels.js"
+    "generateStravaModels": "tsc -p tsconfig_generate_models.json && node ./dist/scripts/generateStravaModels.js",
+    "generateCycleStatsModels": "tsc -p tsconfig_generate_models.json && node ./dist/scripts/generateCycleStatsModels.js"
   },
   "keywords": [],
   "author": "",
