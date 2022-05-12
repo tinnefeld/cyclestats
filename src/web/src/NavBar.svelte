@@ -13,7 +13,7 @@
   }
 </script>
 
-<Navbar class="mb-2">
+<Navbar>
   <Container>
     <Row class="justify-content-end">
       <Col class="col-auto">
@@ -27,7 +27,7 @@
             checked
             on:change={handleUnitChange}
           />
-          <label class="btn btn-outline-secondary" for="btnradioImperial"
+          <label class="btn btn-outline-dark btn-sm" for="btnradioImperial"
             >Imperial</label
           >
 
@@ -39,7 +39,7 @@
             autocomplete="off"
             on:change={handleUnitChange}
           />
-          <label class="btn btn-outline-secondary" for="btnradioMetric"
+          <label class="btn btn-outline-dark btn-sm" for="btnradioMetric"
             >Metric</label
           >
         </div>

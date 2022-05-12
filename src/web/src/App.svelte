@@ -11,19 +11,12 @@
 
 <main>
 	<NavBar />
-	<h1>CycleStats</h1>	
+	<h1 class="text-center font-weight-bold mb-3">CycleStats</h1>	
 	<Login {BACKEND_URL} />
 	{#if $authenticationState === Authentication.SUCCEEDED}
 		<Statistics {BACKEND_URL} />
 	{/if}
-</main>
+</main> 
 
 <style>
-	h1 {
-		text-align: center;
-		color: #F76C6C;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
 </style>

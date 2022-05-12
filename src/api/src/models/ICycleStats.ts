@@ -38,6 +38,14 @@ export interface components {
       /** @description Riding statistics summarized on a monthly basis */
       monthlySummary: {
         year: number;
+        /** @description Distance in kilometers ridden in a year */
+        distance?: number;
+        /** @description Elevation gain in meters climbed in a year */
+        elevation?: number;
+        /** @description Number of rides in a year */
+        rides?: number;
+        /** @description Riding time in minutes */
+        movingTime?: number;
         months: components["schemas"]["SummaryPerMonth"][];
       }[];
     };
@@ -47,8 +55,16 @@ export interface components {
     };
     /** @description Summary of statistics on a monthly basis */
     SummaryPerMonth: {
+      /** @description Month of the year where 0 is January and 11 is December */
       month: number;
+      /** @description Distance in kilometers */
       distance?: number;
+      /** @description Elevation gain in meters */
+      elevation?: number;
+      /** @description Number of rides in a month */
+      rides?: number;
+      /** @description Riding time in minutes */
+      movingTime?: number;
     };
     /**
      * @description Indicates if imperial or metric units are used

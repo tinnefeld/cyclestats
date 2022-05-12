@@ -63,31 +63,66 @@ export class StatisticsService {
   public async createStatistics(): Promise<IStatistics> {
     const activitiesImport = await this.importService.getActivities();
     const monthlySummary: IMonthlySummary = [];
-    let currentMonth = NaN;
-    let currentYear = NaN;
-    let currentDistance = 0;
     for (const activity of activitiesImport) {
       if (activity.start_date_local) {
         const d = new Date(activity.start_date_local);
-        if (isNaN(currentMonth) || isNaN(currentYear)) {
-          // first pass
-          currentMonth = d.getMonth();
-          currentYear = d.getFullYear();
-        } else if (currentMonth !== d.getMonth() || currentYear !== d.getFullYear()) {
-          // we got a new month or year, we add currentDistance to the result
-          // check if year is already present in monthlySummary, if not add it
-          let index = monthlySummary.findIndex(e => e.year === currentYear);
-          if (index < 0) {
-            monthlySummary.push({ year: currentYear, months: [] });
-            index = (monthlySummary.length - 1);
-          }
-          monthlySummary[index].months.push({ month: currentMonth, distance: Math.round(currentDistance / 1000) });
-          currentMonth = d.getMonth();
-          currentYear = d.getFullYear();
-          currentDistance = 0;
+        let indexYear = monthlySummary.findIndex(e => e.year === d.getFullYear());
+        if (indexYear < 0) {
+          // does not exist, we need to create it
+          monthlySummary.push({
+            year: d.getFullYear(),
+            months: [],
+            distance: 0,
+            elevation: 0,
+            rides: 0,
+            movingTime: 0
+          });
+          indexYear = (monthlySummary.length - 1);
+        }
+        let indexMonth = monthlySummary[indexYear].months.findIndex(e => e.month === d.getMonth());
+        if (indexMonth < 0) {
+          // does not exist, we need to create it
+          monthlySummary[indexYear].months.push({
+            month: d.getMonth(),
+            distance: 0,
+            elevation: 0,
+            rides: 0,
+            movingTime: 0
+          });
+          indexMonth = (monthlySummary[indexYear].months.length - 1);
+        }
+        if (monthlySummary[indexYear].rides !== undefined) {
+          monthlySummary[indexYear].rides!++;
+        }
+        if (monthlySummary[indexYear].months[indexMonth].rides !== undefined) {
+          monthlySummary[indexYear].months[indexMonth].rides!++;
         }
         if (activity.distance) {
-          currentDistance += activity.distance;
+          const distance = Math.round(activity.distance / 1000);
+          if (monthlySummary[indexYear].distance !== undefined) {
+            monthlySummary[indexYear].distance! += distance;
+          }
+          if (monthlySummary[indexYear].months[indexMonth].distance !== undefined) {
+            monthlySummary[indexYear].months[indexMonth].distance! += distance;
+          }
+        }
+        if (activity.total_elevation_gain) {
+          const elev = Math.round(activity.total_elevation_gain);
+          if (monthlySummary[indexYear].elevation !== undefined) {
+            monthlySummary[indexYear].elevation! += elev;
+          }
+          if (monthlySummary[indexYear].months[indexMonth].elevation !== undefined) {
+            monthlySummary[indexYear].months[indexMonth].elevation! += elev;
+          }
+        }
+        if (activity.elapsed_time) {
+          const elapsed = Math.round(activity.elapsed_time / 60);
+          if (monthlySummary[indexYear].movingTime !== undefined) {
+            monthlySummary[indexYear].movingTime! += elapsed;
+          }
+          if (monthlySummary[indexYear].months[indexMonth].movingTime !== undefined) {
+            monthlySummary[indexYear].months[indexMonth].movingTime! += elapsed;
+          }
         }
       }
     }

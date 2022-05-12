@@ -1,9 +1,18 @@
 <script lang="ts">
   import Chart from "chart.js/auto";
-  import type { ChartConfiguration } from "chart.js";
+  import type { CartesianScaleOptions, ChartConfiguration } from "chart.js";
   import { onMount } from "svelte";
   import { MeasurementUnit, measurementUnitState } from "../stores";
-  import { DISTANCE_MI_TO_KM, DistanceLong } from "../utils";
+  import {
+    DistanceLong,
+    DistanceShort,
+    ChartColors,
+    METERS_TO_FEET,
+    MILES_TO_KILOMETER,
+    MONTH_LABELS,
+    transparentize,
+    THREE_DOTS
+  } from "../utils";
   import {
     Card,
     CardHeader,
@@ -18,20 +27,10 @@
 
   type IMonthlySummary = components["schemas"]["Statistics"]["monthlySummary"];
 
-  const MONTH_LABELS = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "June",
-    "July",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec"
-  ];
+  enum Parameter {
+    DISTANCE,
+    ELEVATION
+  }
 
   export let data: IMonthlySummary;
   const references = [];
@@ -52,15 +51,22 @@
         labels: MONTH_LABELS,
         datasets: [
           {
-            label: `Distance in ${DistanceLong[$measurementUnitState]}`,
-            backgroundColor: "F76C6C",
-            borderColor: "FEFFFF",
-            data: createChartData($measurementUnitState, yearIndex)
+            label: createLabel($measurementUnitState, Parameter.DISTANCE),
+            yAxisID: "y1",
+            backgroundColor: transparentize(ChartColors.A, 0.5),
+            data: createChartData($measurementUnitState, yearIndex, Parameter.DISTANCE)
+          },
+          {
+            label: createLabel($measurementUnitState, Parameter.ELEVATION),
+            yAxisID: "y2",
+            backgroundColor: transparentize(ChartColors.C, 0.5),
+            data: createChartData($measurementUnitState, yearIndex, Parameter.ELEVATION)
           }
         ]
       },
       options: {
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        scales: createScales()
       }
     };
     return config;
@@ -69,25 +75,92 @@
   function updateChartOnMeasurementUnit() {
     data.forEach((e, i) => {
       if (references[i].chart) {
-        references[i].chart.data.datasets[0].label = `Distance in ${DistanceLong[$measurementUnitState]}`;
-        references[i].chart.data.datasets[0].data = createChartData($measurementUnitState, i);
+        references[i].chart.options.scales = createScales();
+        references[i].chart.data.datasets[0].label = createLabel($measurementUnitState, Parameter.DISTANCE);
+        references[i].chart.data.datasets[0].data = createChartData($measurementUnitState, i, Parameter.DISTANCE);        
+        references[i].chart.data.datasets[1].label = createLabel($measurementUnitState, Parameter.ELEVATION);
+        references[i].chart.data.datasets[1].data = createChartData($measurementUnitState, i, Parameter.ELEVATION);
         references[i].chart.update();
       }
     });
   }
 
-  function createChartData(unit: MeasurementUnit, yearIndex: number): number[] {
+  function createLabel(unit: MeasurementUnit, parameter: Parameter) {
+    let result = "";
+    if (parameter === Parameter.DISTANCE) {
+      result = `Distance in ${DistanceLong[unit]}`;
+    } else if (parameter === Parameter.ELEVATION) {
+      result = `Elevation gain in ${DistanceShort[unit]}`;
+    }
+    return result;
+  }
+
+  function createChartData(unit: MeasurementUnit, yearIndex: number, parameter: Parameter): number[] {
     // result in metric
     let result = MONTH_LABELS.map((e, i) => {
       const monthIndex = data[yearIndex].months.findIndex((m) => m.month === i);
       if (monthIndex >= 0) {
-        return data[yearIndex].months[monthIndex].distance;
+        if (parameter === Parameter.DISTANCE) {
+          return data[yearIndex].months[monthIndex].distance;
+        } else if (parameter === Parameter.ELEVATION) {
+          return data[yearIndex].months[monthIndex].elevation;
+        }
       } else {
         return 0;
       }
     });
     if (unit === MeasurementUnit.IMPERIAL) {
-      result = result.map((x) => Math.round(x * DISTANCE_MI_TO_KM));
+      if (parameter === Parameter.DISTANCE) {
+        result = result.map((x) => Math.round(x * MILES_TO_KILOMETER));
+      } else if (parameter === Parameter.ELEVATION) {
+        result = result.map((x) => Math.round(x * METERS_TO_FEET));
+      }
+    }
+    return result;
+  }
+
+  function createScales() {
+    return {
+            y1: {
+                type: "linear" as any,
+                position: "left" as CartesianScaleOptions["position"],
+                title: {
+                  display: window.matchMedia(`(min-width: 768px)`).matches,
+                  text: DistanceLong[$measurementUnitState]
+                }
+            },
+            y2: {
+                type: "linear" as any,
+                position: "right" as CartesianScaleOptions["position"],
+                title: {
+                  display: window.matchMedia(`(min-width: 768px)`).matches,
+                  text: DistanceShort[$measurementUnitState]
+                },
+                grid: {
+                  drawOnChartArea: false, // only want the grid lines for one axis to show up
+                },
+            }
+        }
+  }
+
+  function getDistanceLong(distanceInKm: number, unit: MeasurementUnit): string {
+    let result = "";
+    if ($measurementUnitState === MeasurementUnit.METRIC) {
+      result = `${distanceInKm.toString().replace(THREE_DOTS, ".")} ${DistanceLong[$measurementUnitState]}`;
+    } else if ($measurementUnitState === MeasurementUnit.IMPERIAL) {
+      result = `${Math.round(distanceInKm*MILES_TO_KILOMETER).toString().replace(THREE_DOTS, ".")} ` + 
+               `${DistanceLong[$measurementUnitState]}`;
+    }
+    return result;
+  }
+
+  function getDistanceShort(distanceInMeters: number, unit: MeasurementUnit): string {
+    let result = "";
+    if ($measurementUnitState === MeasurementUnit.METRIC) {
+      result = `${distanceInMeters.toString().replace(THREE_DOTS, ".")} ${DistanceShort[$measurementUnitState]}`;
+    } else if ($measurementUnitState === MeasurementUnit.IMPERIAL) {
+      result = `${Math.round(distanceInMeters*METERS_TO_FEET).toString().replace(THREE_DOTS, ".")} ` +
+               `${DistanceShort[$measurementUnitState]}`;
     }
     return result;
   }
@@ -111,8 +184,9 @@
         <Card class="shadow">
           <CardHeader>
             <CardTitle>{d.year}</CardTitle>
-            <CardSubtitle
-              >1134 miles | 44.323 feet elev gain | 12 days 55 hours 11 minustes</CardSubtitle>
+            <CardSubtitle>{d.rides} rides | {getDistanceLong(d.distance, $measurementUnitState)} |
+                          {getDistanceShort(d.elevation, $measurementUnitState)} elevation gain            
+            </CardSubtitle>
           </CardHeader>
           <CardBody>
             <canvas bind:this={references[i].canvas} />

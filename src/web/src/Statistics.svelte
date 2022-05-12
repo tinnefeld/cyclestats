@@ -1,7 +1,17 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { bearerToken } from "./stores";
-  import { Card, CardHeader, CardTitle, CardBody, CardText, Col, Container, Row } from "sveltestrap";
+  import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardSubtitle,
+    CardBody,
+    CardText,
+    Col,
+    Container,
+    Row,
+  } from "sveltestrap";
   import type { components } from "./models/ICycleStats";
   import MonthlySummary from "./charts/MonthlySummary.svelte";
 
@@ -17,7 +27,7 @@
     try {
       const headerAuth = {
         "Content-type": "application/json",
-        Authorization: `Bearer ${$bearerToken}`
+        Authorization: `Bearer ${$bearerToken}`,
       };
       fetch(`${BACKEND_URL}/summary`, { headers: headerAuth })
         .then((summaryResponse) => summaryResponse.json())
@@ -34,55 +44,44 @@
 
 <Container>
   <Row>
-    <Col md="3">
-      <div class="jumbotron">
+    <Col class="col-auto mb-3">
       {#if storeSummary && storeSummary.cyclist}
-        <h2>
-          Hello {storeSummary.cyclist.firstName}
-          {storeSummary.cyclist.lastName}
-        </h2>
-        <ul>
-          {#each Object.keys(storeSummary.cyclist) as key}
-            {#if key !== "profileUrl"}
-            <li>{key} : {storeSummary.cyclist[key]}</li>
-            {/if}
-          {/each}
-        </ul>
+        <Card class="shadow" style="height: 100%">
+          <CardHeader>
+            <Row>
+            <Col class="col-3 text-center">
+              <img src={storeSummary.cyclist.profileUrl} class="img-fluid rounded-circle" alt="mobile screen">
+            </Col>
+            <Col class="col-9">
+            <CardTitle>{storeSummary.cyclist.firstName} {storeSummary.cyclist.lastName}</CardTitle>
+            <CardSubtitle>{storeSummary.cyclist.location}</CardSubtitle>
+          </Col>
+          </Row>
+          </CardHeader>
+          <CardBody>
+            Information on the rider            
+          </CardBody>
+        </Card>
       {/if}
-    </div>
     </Col>
-    <Col>
-
-      <Card class="shadow">
+    <Col class="mb-3">
+      <Card class="shadow" style="height: 100%">
         <CardHeader>
-          <CardTitle>Card title</CardTitle>
+          <CardTitle>Summary</CardTitle>
         </CardHeader>
         <CardBody>
           <CardText>
-            Some quick example text to build on the card title and make up the bulk of
-            the card's content.
+            Overview on general statistics
           </CardText>
         </CardBody>
       </Card>
-      
     </Col>
   </Row>
 </Container>
 
 {#if storeStatistics && storeStatistics.monthlySummary}
-  <MonthlySummary data={storeStatistics.monthlySummary}/>
+  <MonthlySummary data={storeStatistics.monthlySummary} />
 {/if}
 
-
 <style>
-  .jumbotron {
-  height: 200px;
-  padding: 1rem 1rem;
-  margin-bottom: 2rem;
-  background-color: #ffffff;
-  border-radius: 0.5rem;
-  }
-  :global(.cardCyleStats) {
-  border-radius: 0.5rem !important;
-  }
 </style>
