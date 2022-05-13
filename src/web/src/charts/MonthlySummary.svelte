@@ -2,17 +2,22 @@
   import Chart from "chart.js/auto";
   import type { CartesianScaleOptions, ChartConfiguration } from "chart.js";
   import { onMount } from "svelte";
-  import { MeasurementUnit, measurementUnitState } from "../stores";
+  import { measurementUnitState } from "../stores";
+  import { MeasurementUnit } from "../constants";
+  import {
+    getDistanceLong,
+    getDistanceShort,
+    convertMinutesToDaysAndHours,
+    transparentize
+  } from "../utils";
   import {
     DistanceLong,
     DistanceShort,
     ChartColors,
     METERS_TO_FEET,
     MILES_TO_KILOMETER,
-    MONTH_LABELS,
-    transparentize,
-    THREE_DOTS
-  } from "../utils";
+    MONTH_LABELS
+  } from "../constants";
   import {
     Card,
     CardHeader,
@@ -77,7 +82,7 @@
       if (references[i].chart) {
         references[i].chart.options.scales = createScales();
         references[i].chart.data.datasets[0].label = createLabel($measurementUnitState, Parameter.DISTANCE);
-        references[i].chart.data.datasets[0].data = createChartData($measurementUnitState, i, Parameter.DISTANCE);        
+        references[i].chart.data.datasets[0].data = createChartData($measurementUnitState, i, Parameter.DISTANCE);
         references[i].chart.data.datasets[1].label = createLabel($measurementUnitState, Parameter.ELEVATION);
         references[i].chart.data.datasets[1].data = createChartData($measurementUnitState, i, Parameter.ELEVATION);
         references[i].chart.update();
@@ -105,9 +110,8 @@
         } else if (parameter === Parameter.ELEVATION) {
           return data[yearIndex].months[monthIndex].elevation;
         }
-      } else {
-        return 0;
       }
+      return 0;
     });
     if (unit === MeasurementUnit.IMPERIAL) {
       if (parameter === Parameter.DISTANCE) {
@@ -121,48 +125,26 @@
 
   function createScales() {
     return {
-            y1: {
-                type: "linear" as any,
-                position: "left" as CartesianScaleOptions["position"],
-                title: {
-                  display: window.matchMedia(`(min-width: 768px)`).matches,
-                  text: DistanceLong[$measurementUnitState]
-                }
-            },
-            y2: {
-                type: "linear" as any,
-                position: "right" as CartesianScaleOptions["position"],
-                title: {
-                  display: window.matchMedia(`(min-width: 768px)`).matches,
-                  text: DistanceShort[$measurementUnitState]
-                },
-                grid: {
-                  drawOnChartArea: false, // only want the grid lines for one axis to show up
-                },
-            }
+      y1: {
+        type: "linear" as any,
+        position: "left" as CartesianScaleOptions["position"],
+        title: {
+          display: window.matchMedia(`(min-width: 768px)`).matches,
+          text: DistanceLong[$measurementUnitState]
         }
-  }
-
-  function getDistanceLong(distanceInKm: number, unit: MeasurementUnit): string {
-    let result = "";
-    if ($measurementUnitState === MeasurementUnit.METRIC) {
-      result = `${distanceInKm.toString().replace(THREE_DOTS, ".")} ${DistanceLong[$measurementUnitState]}`;
-    } else if ($measurementUnitState === MeasurementUnit.IMPERIAL) {
-      result = `${Math.round(distanceInKm*MILES_TO_KILOMETER).toString().replace(THREE_DOTS, ".")} ` + 
-               `${DistanceLong[$measurementUnitState]}`;
+      },
+      y2: {
+        type: "linear" as any,
+        position: "right" as CartesianScaleOptions["position"],
+        title: {
+          display: window.matchMedia(`(min-width: 768px)`).matches,
+          text: DistanceShort[$measurementUnitState]
+        },
+        grid: {
+          drawOnChartArea: false, // only want the grid lines for one axis to show up
+        },
+      }
     }
-    return result;
-  }
-
-  function getDistanceShort(distanceInMeters: number, unit: MeasurementUnit): string {
-    let result = "";
-    if ($measurementUnitState === MeasurementUnit.METRIC) {
-      result = `${distanceInMeters.toString().replace(THREE_DOTS, ".")} ${DistanceShort[$measurementUnitState]}`;
-    } else if ($measurementUnitState === MeasurementUnit.IMPERIAL) {
-      result = `${Math.round(distanceInMeters*METERS_TO_FEET).toString().replace(THREE_DOTS, ".")} ` +
-               `${DistanceShort[$measurementUnitState]}`;
-    }
-    return result;
   }
 
   onMount(() => {
@@ -185,7 +167,8 @@
           <CardHeader>
             <CardTitle>{d.year}</CardTitle>
             <CardSubtitle>{d.rides} rides | {getDistanceLong(d.distance, $measurementUnitState)} |
-                          {getDistanceShort(d.elevation, $measurementUnitState)} elevation gain            
+                          {getDistanceShort(d.elevation, $measurementUnitState)} elevation gain | 
+                          {convertMinutesToDaysAndHours(d.movingTime)}     
             </CardSubtitle>
           </CardHeader>
           <CardBody>

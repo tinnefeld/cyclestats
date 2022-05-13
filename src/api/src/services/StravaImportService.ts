@@ -34,7 +34,7 @@ export class StravaImportService {
   public async getActivities(): Promise<IStravaSummaryActivity[]> {
     let result: IStravaSummaryActivity[] = [];
     if (this.NODE_ENV === "DEV") {
-      result = await this.loadLocalData("activities_personal_full.json");
+      result = await this.loadLocalData("activities_basic.json");
     } else if (this.NODE_ENV === "PROD") {
       const perPage = 100;
       let currentPage = 1;

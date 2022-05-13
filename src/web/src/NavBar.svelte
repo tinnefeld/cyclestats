@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Col, Container, Navbar, Row } from "sveltestrap";
-  import { MeasurementUnit, measurementUnitState } from "./stores";
+  import { MeasurementUnit } from "./constants";
+  import { measurementUnitState } from "./stores";
 
   function handleUnitChange(event: Event) {
     if (event.target instanceof Element) {
@@ -27,10 +28,7 @@
             checked
             on:change={handleUnitChange}
           />
-          <label class="btn btn-outline-dark btn-sm" for="btnradioImperial"
-            >Imperial</label
-          >
-
+          <label class="btn btn-outline-dark btn-sm" for="btnradioImperial">Imperial</label>
           <input
             type="radio"
             class="btn-check"
@@ -39,9 +37,7 @@
             autocomplete="off"
             on:change={handleUnitChange}
           />
-          <label class="btn btn-outline-dark btn-sm" for="btnradioMetric"
-            >Metric</label
-          >
+          <label class="btn btn-outline-dark btn-sm" for="btnradioMetric">Metric</label>
         </div>
       </Col>
     </Row>

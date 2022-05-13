@@ -95,34 +95,27 @@ components:
       type: object
       properties:
         monthlySummary:
-          description: Riding statistics summarized on a monthly basis
+          description: Riding statistics summarized for a given year and month
           type: array
           items:
-            type: object
-            properties:
-              year:
-                type: number
-              distance:
-                description: Distance in kilometers ridden in a year
-                type: number
-              elevation:
-                description: Elevation gain in meters climbed in a year
-                type: number
-              rides:
-                description: Number of rides in a year
-                type: number
-              movingTime:
-                description: Riding time in minutes
-                type: number
-              months:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SummaryPerMonth'
-            required:
-            - year
-            - months
+            allOf:
+              - $ref: '#/components/schemas/Measurements'
+              - type: object
+                properties:
+                  year:
+                    type: number
+                  months:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SummaryPerMonth'
+                required:
+                  - year
+                  - months
+        totalSummary:
+          $ref: '#/components/schemas/Measurements'
       required:
-            - monthlySummary
+        - monthlySummary
+        - totalSummary
     Summary:
       description: Summary info about cyclist and rides
       type: object
@@ -130,12 +123,26 @@ components:
         cyclist:
           $ref: '#/components/schemas/Cyclist'
     SummaryPerMonth:
-      description: Summary of statistics on a monthly basis
+      allOf:
+        - $ref: '#/components/schemas/Measurements'
+        - type: object
+          description: Summary of statistics on a monthly basis
+          properties:
+            month:
+              description: Month of the year where 0 is January and 11 is December
+              type: number
+          required:
+            - month
+    MeasurementUnit:
+      description: Indicates if imperial or metric units are used
+      type: string
+      enum:
+        - IMPERIAL
+        - METRIC
+    Measurements:
+      description: Different ride measurements
       type: object
       properties:
-        month:
-          description: Month of the year where 0 is January and 11 is December
-          type: number
         distance:
           description: Distance in kilometers
           type: number
@@ -143,16 +150,11 @@ components:
           description: Elevation gain in meters
           type: number
         rides:
-          description: Number of rides in a month
+          description: Number of rides
           type: number
         movingTime:
           description: Riding time in minutes
           type: number
-      required:
-        - month
-    MeasurementUnit:
-      description: Indicates if imperial or metric units are used
-      type: string
-      enum:
-        - IMPERIAL
-        - METRIC
+        energy:
+          description: Energy spent in kilowatt-hours
+          type: number

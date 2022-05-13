@@ -7,13 +7,13 @@
     CardTitle,
     CardSubtitle,
     CardBody,
-    CardText,
     Col,
     Container,
-    Row,
+    Row
   } from "sveltestrap";
   import type { components } from "./models/ICycleStats";
   import MonthlySummary from "./charts/MonthlySummary.svelte";
+  import SummaryCard from "./SummaryCard.svelte";
 
   type IStatistics = components["schemas"]["Statistics"];
   type ISummary = components["schemas"]["Summary"];
@@ -27,7 +27,7 @@
     try {
       const headerAuth = {
         "Content-type": "application/json",
-        Authorization: `Bearer ${$bearerToken}`,
+        Authorization: `Bearer ${$bearerToken}`
       };
       fetch(`${BACKEND_URL}/summary`, { headers: headerAuth })
         .then((summaryResponse) => summaryResponse.json())
@@ -65,16 +65,9 @@
       {/if}
     </Col>
     <Col class="mb-3">
-      <Card class="shadow" style="height: 100%">
-        <CardHeader>
-          <CardTitle>Summary</CardTitle>
-        </CardHeader>
-        <CardBody>
-          <CardText>
-            Overview on general statistics
-          </CardText>
-        </CardBody>
-      </Card>
+      {#if storeStatistics}
+      <SummaryCard data={storeStatistics} />
+      {/if}
     </Col>
   </Row>
 </Container>

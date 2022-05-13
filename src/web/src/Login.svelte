@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Authentication, authenticationState, bearerToken } from "./stores";
+  import { Authentication } from "./constants";
+  import { authenticationState, bearerToken } from "./stores";
   const urlParams = new URLSearchParams(window.location.search);
 
   export let BACKEND_URL: string;

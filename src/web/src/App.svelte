@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Styles as SveltestrapStyles } from "sveltestrap";
-	import { Authentication, authenticationState } from "./stores";
+	import { Authentication } from "./constants";
+	import { authenticationState } from "./stores";
 	import Login from "./Login.svelte";
 	import NavBar from "./NavBar.svelte";
 	import Statistics from "./Statistics.svelte";

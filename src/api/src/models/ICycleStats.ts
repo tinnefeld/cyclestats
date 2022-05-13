@@ -35,42 +35,39 @@ export interface components {
     };
     /** @description Detailed statistics about cyclist and rides */
     Statistics: {
-      /** @description Riding statistics summarized on a monthly basis */
-      monthlySummary: {
+      /** @description Riding statistics summarized for a given year and month */
+      monthlySummary: (components["schemas"]["Measurements"] & {
         year: number;
-        /** @description Distance in kilometers ridden in a year */
-        distance?: number;
-        /** @description Elevation gain in meters climbed in a year */
-        elevation?: number;
-        /** @description Number of rides in a year */
-        rides?: number;
-        /** @description Riding time in minutes */
-        movingTime?: number;
         months: components["schemas"]["SummaryPerMonth"][];
-      }[];
+      })[];
+      totalSummary: components["schemas"]["Measurements"];
     };
     /** @description Summary info about cyclist and rides */
     Summary: {
       cyclist?: components["schemas"]["Cyclist"];
     };
-    /** @description Summary of statistics on a monthly basis */
-    SummaryPerMonth: {
+    SummaryPerMonth: components["schemas"]["Measurements"] & {
       /** @description Month of the year where 0 is January and 11 is December */
       month: number;
-      /** @description Distance in kilometers */
-      distance?: number;
-      /** @description Elevation gain in meters */
-      elevation?: number;
-      /** @description Number of rides in a month */
-      rides?: number;
-      /** @description Riding time in minutes */
-      movingTime?: number;
     };
     /**
      * @description Indicates if imperial or metric units are used
      * @enum {string}
      */
     MeasurementUnit: "IMPERIAL" | "METRIC";
+    /** @description Different ride measurements */
+    Measurements: {
+      /** @description Distance in kilometers */
+      distance?: number;
+      /** @description Elevation gain in meters */
+      elevation?: number;
+      /** @description Number of rides */
+      rides?: number;
+      /** @description Riding time in minutes */
+      movingTime?: number;
+      /** @description Energy spent in kilowatt-hours */
+      energy?: number;
+    };
   };
 }
 

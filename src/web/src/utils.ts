@@ -1,45 +1,51 @@
 import colorLib from "@kurkle/color";
+import { MeasurementUnit } from "./constants";
+import {
+  DistanceLong,
+  DistanceLongAbbreviated,
+  DistanceShort,
+  DistanceShortAbbreviated,  
+  METERS_TO_FEET,
+  MILES_TO_KILOMETER,
+  THREE_DIGITS
+} from "./constants";
 
-export const METERS_TO_FEET = 3.281;
-export const MILES_TO_KILOMETER = 0.6214;
-export const THREE_DOTS = /\B(?=(\d{3})+(?!\d))/g;
-
-export const MONTH_LABELS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
-];
-
-export enum DistanceLongAbbreviated {
-  IMPERIAL = "mi",
-  METRIC = "km"
+export function getDistanceLong(distanceInKm: number, unit: MeasurementUnit, abbreviated: boolean = false): string {
+  let result = "";
+  if (unit === MeasurementUnit.METRIC) {
+    result = `${distanceInKm.toString().replace(THREE_DIGITS, ",")}`;
+  } else if (unit === MeasurementUnit.IMPERIAL) {
+    result = `${Math.round(distanceInKm*MILES_TO_KILOMETER).toString().replace(THREE_DIGITS, ",")}`;
+  }
+  if (abbreviated) {
+    result += ` ${DistanceLongAbbreviated[unit]}`;
+  } else {
+    result += ` ${DistanceLong[unit]}`;
+  }
+  return result;
 }
 
-export enum DistanceLong {
-  IMPERIAL = "miles",
-  METRIC = "kilometers"
+export function getDistanceShort(distanceInMeters: number, unit: MeasurementUnit, abbreviated: boolean = false): string {
+  let result = "";
+  if (unit === MeasurementUnit.METRIC) {
+    result = `${distanceInMeters.toString().replace(THREE_DIGITS, ",")}`;
+  } else if (unit === MeasurementUnit.IMPERIAL) {
+    result = `${Math.round(distanceInMeters*METERS_TO_FEET).toString().replace(THREE_DIGITS, ",")}`;
+  }
+  if (abbreviated) {
+    result += ` ${DistanceShortAbbreviated[unit]}`;
+  } else {
+    result += ` ${DistanceShort[unit]}`;
+  }
+  return result;
 }
 
-export enum DistanceShort {
-  IMPERIAL = "feet",
-  METRIC = "meters"
-}
-
-export enum ChartColors {
-  A = "#003f5c", // DARK_BLUE
-  B = "#58508d", // PURPLE
-  C = "#bc5090", // PINK
-  D = "#ff6361", // RED
-  E = "#ffa600" // YELLOW
+export function convertMinutesToDaysAndHours(minutes: number, abbreviated: boolean = false) {
+    const days = Math.floor(minutes / (60*24));
+    const hours = Math.floor(minutes % (60*24) / 60);
+    const daysDisplay = days > 0 ? days + (days == 1 ? ` ${abbreviated ? "d" : "day"} ` : ` ${abbreviated ? "d" : "days"} `) : "";
+    const hoursDisplay = hours > 0 ? hours + (hours == 1 ? ` ${abbreviated ? "hr" : "hour"} ` : ` ${abbreviated ? "hrs" : "hours"} `) : "";
+    return daysDisplay + hoursDisplay;
 }
 
 export function transparentize(value, opacity) {
