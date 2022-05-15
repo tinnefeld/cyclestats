@@ -76,11 +76,17 @@ components:
           type: string  
         sex:
           type: string
-        location:
+        city:
+          type: string
+        state:
+          type: string
+        country:
           type: string
         ftp:
+          description: Functional threshold power in watts
           type: number
         weight:
+          description: Weight in kilograms
           type: number
         profileUrl:
           type: string
@@ -89,7 +95,11 @@ components:
         longestRide:
           type: number
         highestClimb:
-          type: number        
+          type: number
+        bikes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bike'
     Statistics:
       description: Detailed statistics about cyclist and rides
       type: object
@@ -158,3 +168,15 @@ components:
         energy:
           description: Energy spent in kilowatt-hours
           type: number
+    Bike:
+      description: Details about a bicycle
+      type: object
+      properties:
+        name:
+          description: Make, model or name of the bicycle
+          type: string
+        distance:
+          description: Distance ridden with the bicycle
+          type: number
+      required:
+        - name

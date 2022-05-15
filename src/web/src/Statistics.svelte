@@ -1,17 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { bearerToken } from "./stores";
-  import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardSubtitle,
-    CardBody,
-    Col,
-    Container,
-    Row
-  } from "sveltestrap";
+  import { Col, Container, Row } from "sveltestrap";
   import type { components } from "./models/ICycleStats";
+  import CyclistCard from "./CyclistCard.svelte";
   import MonthlySummary from "./charts/MonthlySummary.svelte";
   import SummaryCard from "./SummaryCard.svelte";
 
@@ -46,27 +38,12 @@
   <Row>
     <Col class="col-auto mb-3">
       {#if storeSummary && storeSummary.cyclist}
-        <Card class="shadow" style="height: 100%">
-          <CardHeader>
-            <Row>
-            <Col class="col-3 text-center">
-              <img src={storeSummary.cyclist.profileUrl} class="img-fluid rounded-circle" alt="mobile screen">
-            </Col>
-            <Col class="col-9">
-            <CardTitle>{storeSummary.cyclist.firstName} {storeSummary.cyclist.lastName}</CardTitle>
-            <CardSubtitle>{storeSummary.cyclist.location}</CardSubtitle>
-          </Col>
-          </Row>
-          </CardHeader>
-          <CardBody>
-            Information on the rider            
-          </CardBody>
-        </Card>
+        <CyclistCard data={storeSummary.cyclist} />
       {/if}
     </Col>
     <Col class="mb-3">
       {#if storeStatistics}
-      <SummaryCard data={storeStatistics} />
+        <SummaryCard data={storeStatistics} />
       {/if}
     </Col>
   </Row>
@@ -75,6 +52,3 @@
 {#if storeStatistics && storeStatistics.monthlySummary}
   <MonthlySummary data={storeStatistics.monthlySummary} />
 {/if}
-
-<style>
-</style>

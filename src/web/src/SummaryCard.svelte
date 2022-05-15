@@ -15,7 +15,7 @@
   export let data: IStatistics;
 </script>
 
-<Card class="shadow" style="height: 100%">
+<Card class="shadow">
   <CardHeader>
     <CardTitle>Summary</CardTitle>
   </CardHeader>

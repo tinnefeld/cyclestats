@@ -25,13 +25,18 @@ export interface components {
       firstName?: string;
       lastName?: string;
       sex?: string;
-      location?: string;
+      city?: string;
+      state?: string;
+      country?: string;
+      /** @description Functional threshold power in watts */
       ftp?: number;
+      /** @description Weight in kilograms */
       weight?: number;
       profileUrl?: string;
       measurement?: components["schemas"]["MeasurementUnit"];
       longestRide?: number;
       highestClimb?: number;
+      bikes?: components["schemas"]["Bike"][];
     };
     /** @description Detailed statistics about cyclist and rides */
     Statistics: {
@@ -67,6 +72,13 @@ export interface components {
       movingTime?: number;
       /** @description Energy spent in kilowatt-hours */
       energy?: number;
+    };
+    /** @description Details about a bicycle */
+    Bike: {
+      /** @description Make, model or name of the bicycle */
+      name: string;
+      /** @description Distance ridden with the bicycle */
+      distance?: number;
     };
   };
 }

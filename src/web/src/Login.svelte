@@ -8,7 +8,7 @@
 
   const STRAVA_OAUTH_URL = "https://www.strava.com/oauth/authorize";
   const STRAVA_CLIENT_ID = "79758";
-  const STRAVA_SCOPE = "read,read_all,activity:read_all";
+  const STRAVA_SCOPE = "read,read_all,activity:read_all,profile:read_all";
   const REDIRECT_URL = "http://localhost:8080";
 
   onMount(async () => {
@@ -33,14 +33,14 @@
     }
   });
 
-  function loginClick() {
+  function loginStravaClick() {
     window.location.replace(`${STRAVA_OAUTH_URL}?client_id=${STRAVA_CLIENT_ID}&response_type=code&` +
                             `redirect_uri=${REDIRECT_URL}?approval_prompt=force&scope=${STRAVA_SCOPE}`);
   }
 </script>
 
 {#if $authenticationState === Authentication.NONE} 
-    <button on:click={loginClick}>
+    <button on:click={loginStravaClick}>
       Login with Strava
   </button>
 {/if}

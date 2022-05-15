@@ -1,5 +1,6 @@
 export const METERS_TO_FEET = 3.281;
 export const MILES_TO_KILOMETER = 0.6214;
+export const KILOGRAM_TO_POUND = 2.205;
 export const THREE_DIGITS = /\B(?=(\d{3})+(?!\d))/g;
 
 export const MONTH_LABELS = [
@@ -41,6 +42,11 @@ export enum DistanceShortAbbreviated {
 export enum DistanceShort {
   IMPERIAL = "feet",
   METRIC = "meters"
+}
+
+export enum WeightAbbreviated {
+  IMPERIAL = "lb",
+  METRIC = "kg"
 }
 
 export enum ChartColors {

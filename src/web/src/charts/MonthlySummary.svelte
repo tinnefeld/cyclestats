@@ -129,7 +129,7 @@
         type: "linear" as any,
         position: "left" as CartesianScaleOptions["position"],
         title: {
-          display: window.matchMedia(`(min-width: 768px)`).matches,
+          display: window.matchMedia("(min-width: 768px)").matches,
           text: DistanceLong[$measurementUnitState]
         }
       },
@@ -137,14 +137,14 @@
         type: "linear" as any,
         position: "right" as CartesianScaleOptions["position"],
         title: {
-          display: window.matchMedia(`(min-width: 768px)`).matches,
+          display: window.matchMedia("(min-width: 768px)").matches,
           text: DistanceShort[$measurementUnitState]
         },
         grid: {
-          drawOnChartArea: false, // only want the grid lines for one axis to show up
-        },
+          drawOnChartArea: false, // only want the grid lines for y1 axis to show up
+        }
       }
-    }
+    };
   }
 
   onMount(() => {

@@ -1,5 +1,4 @@
 import { components } from "../models/ICycleStats";
-import { definitions } from "../models/IStrava";
 import { BearerToken } from "../models/IUtils";
 import { StravaImportService } from "./StravaImportService.js";
 
@@ -8,7 +7,6 @@ type IMonthlySummary = components["schemas"]["Statistics"]["monthlySummary"];
 type ITotalSummary = components["schemas"]["Statistics"]["totalSummary"];
 type IStatistics = components["schemas"]["Statistics"];
 type ISummary = components["schemas"]["Summary"];
-type IStravaActivityStats = definitions["ActivityStats"];
 
 export class StatisticsService {
   private importService: StravaImportService;
@@ -19,10 +17,6 @@ export class StatisticsService {
 
   public async createSummary(): Promise<ISummary> {
     const cyclistImport = await this.importService.getAthlete();
-    let cyclistStatsSummaryImport: IStravaActivityStats = {};
-    if (cyclistImport.id) {
-      cyclistStatsSummaryImport = await this.importService.getAthleteStats(cyclistImport.id);
-    }
     const cyclist: ICyclist = {};
     if (cyclistImport.firstname) {
       cyclist.firstName = cyclistImport.firstname;
@@ -34,16 +28,28 @@ export class StatisticsService {
       cyclist.profileUrl = cyclistImport.profile;
     }
     if (cyclistImport.sex) {
-      cyclist.sex = cyclistImport.sex;
+      if (cyclistImport.sex === "M") {
+        cyclist.sex = "Male";
+      } else if (cyclistImport.sex === "F") {
+        cyclist.sex = "Female";
+      } else {
+        cyclist.sex = "Non-binary";
+      }
     }
-    if (cyclistImport.city || cyclistImport.state || cyclistImport.country) {
-      cyclist.location = `${cyclistImport.city} ${cyclistImport.state} ${cyclistImport.country}`;
+    if (cyclistImport.city) {
+      cyclist.city = cyclistImport.city;
+    }
+    if (cyclistImport.state) {
+      cyclist.state = cyclistImport.state;
+    }
+    if (cyclistImport.country) {
+      cyclist.country = cyclistImport.country;
     }
     if (cyclistImport.ftp) {
       cyclist.ftp = cyclistImport.ftp;
     }
     if (cyclistImport.weight) {
-      cyclist.weight = cyclistImport.weight;
+      cyclist.weight = Math.round(cyclistImport.weight);
     }
     if (cyclistImport.measurement_preference) {
       if (cyclistImport.measurement_preference === "feet") {
@@ -52,11 +58,18 @@ export class StatisticsService {
         cyclist.measurement = "METRIC";
       }
     }
-    if (cyclistStatsSummaryImport.biggest_ride_distance) {
-      cyclist.longestRide = cyclistStatsSummaryImport.biggest_ride_distance;
-    }
-    if (cyclistStatsSummaryImport.biggest_climb_elevation_gain) {
-      cyclist.highestClimb = cyclistStatsSummaryImport.biggest_climb_elevation_gain;
+    if (cyclistImport.bikes && cyclistImport.bikes.length > 0) {
+      cyclist.bikes = [];
+      cyclistImport.bikes.forEach(b => {
+        if (b.name) {
+          cyclist.bikes!.push({
+            name: b.name
+          });
+          if (b.distance) {
+            cyclist.bikes![cyclist.bikes!.length - 1].distance = Math.floor(b.distance / 1000);
+          }
+        }
+      });
     }
     return { cyclist };
   }
