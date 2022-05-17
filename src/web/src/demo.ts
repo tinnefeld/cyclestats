@@ -3,13 +3,13 @@ type ISummary = components["schemas"]["Summary"];
 type IStatistics = components["schemas"]["Statistics"];
 type ISummaryPerMonth = components["schemas"]["SummaryPerMonth"];
 
-export const DEMO_MODE = false; // if true, UI is in demo mode, serving static content
+export const DEMO_MODE = true; // if true, UI is in demo mode, serving static content
 
 export const DEMO_DATA_SUMMARY: ISummary = {
   cyclist: {
     firstName: "James",
     lastName: "Miller",
-    profileUrl: "https://cloudfront.net/athlete.jpg",
+    profileUrl: "cyclist.jpg",
     sex: "Male",
     city: "Palo Alto",
     state: "California",
