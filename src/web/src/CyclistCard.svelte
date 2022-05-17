@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Card, CardHeader, CardTitle, CardSubtitle, CardText, CardBody, Row, Col, Table } from "sveltestrap";
-  import { getDistanceLong, getWeight } from "./utils";
+  import { getWeight } from "./utils";
   import { measurementUnitState } from "./stores";
   import type { components } from "./models/ICycleStats";
   type ICyclist = components["schemas"]["Cyclist"];
