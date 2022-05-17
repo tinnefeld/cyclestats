@@ -34,7 +34,7 @@ export class StravaImportService {
   public async getActivities(): Promise<IStravaSummaryActivity[]> {
     let result: IStravaSummaryActivity[] = [];
     if (this.NODE_ENV === "DEV") {
-      result = await this.loadLocalData("activities_basic.json");
+      result = await this.loadLocalData("activities_personal_full.json");
     } else if (this.NODE_ENV === "PROD") {
       const perPage = 100;
       let currentPage = 1;
@@ -58,7 +58,7 @@ export class StravaImportService {
   public async getAthlete(): Promise<IStravaDetailedAthlete> {
     let result: IStravaDetailedAthlete = {};
     if (this.NODE_ENV === "DEV") {
-      result = await this.loadLocalData("athlete_basic.json");
+      result = await this.loadLocalData("athlete_personal.json");
     } else if (this.NODE_ENV === "PROD") {
       const response = await fetch(`${STRAVA_ATHLETE_URL}`, { method: "get", headers: this.headers });
       result = await response.json() as any;

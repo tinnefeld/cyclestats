@@ -3,6 +3,7 @@
   import { bearerToken } from "./stores";
   import { Col, Container, Row } from "sveltestrap";
   import type { components } from "./models/ICycleStats";
+  import { DEMO_MODE, DEMO_DATA_SUMMARY, DEMO_DATA_STATISTICS } from "./demo";
   import CyclistCard from "./CyclistCard.svelte";
   import MonthlySummary from "./charts/MonthlySummary.svelte";
   import SummaryCard from "./SummaryCard.svelte";
@@ -16,6 +17,10 @@
   let storeSummary: ISummary;
 
   onMount(async () => {
+    if (DEMO_MODE) {
+      storeSummary = DEMO_DATA_SUMMARY;
+      storeStatistics = DEMO_DATA_STATISTICS;
+    } else {
     try {
       const headerAuth = {
         "Content-type": "application/json",
@@ -31,7 +36,8 @@
     } catch (error) {
       console.log(error);
     }
-  });
+  }
+});
 </script>
 
 <Container>
