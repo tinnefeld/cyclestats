@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Styles as SveltestrapStyles } from "sveltestrap";
+	import { Container, Row, Column, Styles as SveltestrapStyles } from "sveltestrap";
 	import { Authentication } from "./constants";
 	import { authenticationState } from "./stores";
 	import { DEMO_MODE } from "./demo";
@@ -13,14 +13,21 @@
 
 <main>
 	<NavBar />
-	<h1 class="text-center font-weight-bold mb-3">CycleStats</h1>
+	<Container>
+		<Row>
+			<Column class="text-center">
+	      <h1 class="font-weight-bold mb-3">CycleStats</h1>
+			</Column>
+	</Row>
 	{#if !DEMO_MODE}
-	  <Login {BACKEND_URL} />
+	<Row>
+		<Column class="text-center">
+			<Login {BACKEND_URL} />
+		</Column>
+  </Row>
 	{/if}
 	{#if DEMO_MODE || ($authenticationState === Authentication.SUCCEEDED)}
 		<Statistics {BACKEND_URL} />
 	{/if}
+  </Container>
 </main> 
-
-<style>
-</style>

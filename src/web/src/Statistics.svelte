@@ -40,20 +40,20 @@
 });
 </script>
 
-<Container>
-  <Row>
-    <Col class="col-auto mb-3">
-      {#if storeSummary && storeSummary.cyclist}
-        <CyclistCard data={storeSummary.cyclist} />
-      {/if}
-    </Col>
-    <Col class="mb-3">
-      {#if storeStatistics}
-        <SummaryCard data={storeStatistics} />
-      {/if}
-    </Col>
-  </Row>
-</Container>
+
+<Row>
+  <Col class="col-auto mb-3">
+    {#if storeSummary && storeSummary.cyclist}
+      <CyclistCard data={storeSummary.cyclist} />
+    {/if}
+  </Col>
+  <Col class="mb-3">
+    {#if storeStatistics}
+      <SummaryCard data={storeStatistics} />
+    {/if}
+  </Col>
+</Row>
+
 
 {#if storeStatistics && storeStatistics.monthlySummary}
   <MonthlySummary data={storeStatistics.monthlySummary} />
