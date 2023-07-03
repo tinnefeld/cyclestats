@@ -9,7 +9,7 @@
   const STRAVA_OAUTH_URL = "https://www.strava.com/oauth/authorize";
   const STRAVA_CLIENT_ID = "79758";
   const STRAVA_SCOPE = "read,read_all,activity:read_all,profile:read_all";
-  const REDIRECT_URL = "http://localhost:8080";
+  const REDIRECT_URL = " https://tinnefeld.github.io/cyclestats";
 
   onMount(async () => {
     if (urlParams.has("code")) {
