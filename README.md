@@ -1,4 +1,2 @@
 ### Cycle Stats
-Web application to show statistics for cycling activities
-
-[Demo (UI only, static content)](https://tinnefeld.github.io/cyclestats)
+Web application to show statistics for cycling activities - https://tinnefeld.github.io/cyclestats
