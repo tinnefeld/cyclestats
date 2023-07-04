@@ -2,21 +2,21 @@
   import { onMount } from "svelte";
   import { Authentication } from "./constants";
   import { authenticationState, bearerToken } from "./stores";
+  import { WEB_REDIRECT_URL } from "../../api/src/settings";
   const urlParams = new URLSearchParams(window.location.search);
 
-  export let BACKEND_URL: string;
+  export let API_URL: string;
 
   const STRAVA_OAUTH_URL = "https://www.strava.com/oauth/authorize";
   const STRAVA_CLIENT_ID = "79758";
   const STRAVA_SCOPE = "read,read_all,activity:read_all,profile:read_all";
-  const REDIRECT_URL = "https://tinnefeld.github.io/cyclestats";
 
   onMount(async () => {
     if (urlParams.has("code")) {
       authenticationState.set(Authentication.PENDING);
       try {
         const oAuthResponse = await fetch(
-          `${BACKEND_URL}/oauth/token?code=${urlParams.get("code")}`,
+          `${API_URL}/oauth/token?code=${urlParams.get("code")}`,
           { method: "post" }
         );
         if (oAuthResponse.status === 201) {
@@ -35,7 +35,7 @@
 
   function loginStravaClick() {
     window.location.replace(`${STRAVA_OAUTH_URL}?client_id=${STRAVA_CLIENT_ID}&response_type=code&` +
-                            `redirect_uri=${REDIRECT_URL}?approval_prompt=force&scope=${STRAVA_SCOPE}`);
+                            `redirect_uri=${WEB_REDIRECT_URL}?approval_prompt=force&scope=${STRAVA_SCOPE}`);
   }
 </script>
 

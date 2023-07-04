@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import yaml from "yamljs";
 import { connector } from "swagger-routes-express";
+import { WEB_BASE } from "./settings.js";
 
 import * as controller from "./controllers/cycleStatsController.js";
 
@@ -12,7 +13,7 @@ const openApiSpec = yaml.load("./spec/cyclestats.yaml");
 const connect = connector(controller, openApiSpec);
 
 app.use(cors({
-  origin: "https://tinnefeld.github.io"
+  origin: WEB_BASE
 }));
 
 connect(app);

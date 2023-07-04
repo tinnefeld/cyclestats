@@ -11,7 +11,7 @@
   type IStatistics = components["schemas"]["Statistics"];
   type ISummary = components["schemas"]["Summary"];
 
-  export let BACKEND_URL: string;
+  export let API_URL: string;
 
   let storeStatistics: IStatistics;
   let storeSummary: ISummary;
@@ -26,11 +26,11 @@
         "Content-type": "application/json",
         Authorization: `Bearer ${$bearerToken}`
       };
-      fetch(`${BACKEND_URL}/summary`, { headers: headerAuth })
+      fetch(`${API_URL}/summary`, { headers: headerAuth })
         .then((summaryResponse) => summaryResponse.json())
         .then((summaryData) => (storeSummary = summaryData));
 
-      fetch(`${BACKEND_URL}/statistics`, { headers: headerAuth })
+      fetch(`${API_URL}/statistics`, { headers: headerAuth })
         .then((statisticsResponse) => statisticsResponse.json())
         .then((statisticsData) => (storeStatistics = statisticsData));
     } catch (error) {

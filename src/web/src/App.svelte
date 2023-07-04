@@ -3,10 +3,10 @@
 	import { Authentication } from "./constants";
 	import { authenticationState } from "./stores";
 	import { DEMO_MODE } from "./demo";
+	import { API_URL } from "../../api/src/settings";
 	import Login from "./Login.svelte";
 	import NavBar from "./NavBar.svelte";
 	import Statistics from "./Statistics.svelte";
-	const BACKEND_URL = "https://cyclestats-api-swhgu.ondigitalocean.app/api/v1";
 </script>
 
 <SveltestrapStyles />
@@ -22,12 +22,12 @@
 	{#if !DEMO_MODE}
 	<Row>
 		<Column class="text-center">
-			<Login {BACKEND_URL} />
+			<Login {API_URL} />
 		</Column>
   </Row>
 	{/if}
 	{#if DEMO_MODE || ($authenticationState === Authentication.SUCCEEDED)}
-		<Statistics {BACKEND_URL} />
+		<Statistics {API_URL} />
 	{/if}
   </Container>
 </main> 
