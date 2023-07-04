@@ -27,6 +27,7 @@ export async function postToken(req: express.Request, res: express.Response): Pr
   if (!req.query.code) {
     res.status(400).send("Missing authorization code");
   }
+  console.log(req.headers);
   const stravaService = new StravaImportService();
   const result = await stravaService.getOAuthToken(req.query.code as AuthCode);
   if (result.status === 200 || result.status === 201) {

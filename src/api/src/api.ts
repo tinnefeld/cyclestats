@@ -12,7 +12,7 @@ const openApiSpec = yaml.load("./spec/cyclestats.yaml");
 const connect = connector(controller, openApiSpec);
 
 app.use(cors({
-  origin: "http://localhost:8080"
+  origin: "https://tinnefeld.github.io"
 }));
 
 connect(app);
