@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { bearerToken } from "./stores";
-  import { Col, Container, Row } from "sveltestrap";
+  import { Col, Row, Spinner } from "sveltestrap";
   import type { components } from "./models/ICycleStats";
   import { DEMO_MODE, DEMO_DATA_SUMMARY, DEMO_DATA_STATISTICS } from "./demo";
   import CyclistCard from "./CyclistCard.svelte";
@@ -40,16 +40,19 @@
 });
 </script>
 
-
 <Row>
   <Col class="col-auto mb-3">
     {#if storeSummary && storeSummary.cyclist}
       <CyclistCard data={storeSummary.cyclist} />
+    {:else}
+      <Spinner />
     {/if}
   </Col>
   <Col class="mb-3">
     {#if storeStatistics}
       <SummaryCard data={storeStatistics} />
+    {:else}
+      <Spinner />
     {/if}
   </Col>
 </Row>
@@ -57,4 +60,6 @@
 
 {#if storeStatistics && storeStatistics.monthlySummary}
   <MonthlySummary data={storeStatistics.monthlySummary} />
+{:else}
+  <Spinner />
 {/if}

@@ -159,7 +159,7 @@
   $: $measurementUnitState, updateChartOnMeasurementUnit();
 </script>
 
-<Container>
+
   {#each data as d, i}
     <Row class="mb-3">
       <Col>
@@ -178,4 +178,4 @@
       </Col>
     </Row>
   {/each}
-</Container>
+
